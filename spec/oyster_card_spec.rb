@@ -59,9 +59,10 @@ describe OysterCard do
         expect(subject.journey).to eq false
       end
 
-      it "forgets the entry station" do
+      it "creates a trip" do
         subject.touch_in(station)
-        expect {subject.touch_out}.to change(subject, :entry_station).from(station).to(nil)
+        subject.touch_out(station)
+        expect(subject.trip).to eq [[{start: station}, {end: station}]]
       end
     end
 
