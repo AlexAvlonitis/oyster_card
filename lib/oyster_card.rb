@@ -37,7 +37,7 @@ class OysterCard
   end
 
   def less_than_min_limit
-    balance < MINIMUM_LIMIT
+    @balance < MINIMUM_LIMIT
   end
 
   def set_journey_status(status)

@@ -34,7 +34,7 @@ describe OysterCard do
       let(:station) {double :station}
 
       before do
-        allow(subject).to receive(:balance).and_return(10)
+        subject.topup(10)
       end
       it 'touch in sets journey to true' do
         subject.touch_in
@@ -51,7 +51,7 @@ describe OysterCard do
       let(:station) {double :station}
 
       before do
-        allow(subject).to receive(:balance).and_return(10)
+        subject.topup(10)
       end
 
       it "touch out sets journey to false" do
