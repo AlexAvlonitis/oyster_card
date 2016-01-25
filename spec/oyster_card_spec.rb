@@ -26,7 +26,6 @@ subject(:OysterCard) {described_class.new}
     end
 
     context 'Deducting from the balance' do
-
       it 'deducts minimum fare from balance when touch out' do
         subject.topup(10)
         expect {subject.touch_out}.to change(subject, :balance).from(10).to(9)
@@ -34,10 +33,16 @@ subject(:OysterCard) {described_class.new}
     end
 
     describe 'touch in' do
-      it 'touch in sets journey to true' do
+      before do
         allow(subject).to receive(:balance).and_return(10)
+      end
+      it 'touch in sets journey to true' do
         subject.touch_in
         expect(subject.journey).to eq true
+      end
+
+      it 'sets the starting station' do
+        expect {subject.touch_in("Aldgate")}.to change(subject, :start_from)
       end
     end
 
@@ -47,5 +52,6 @@ subject(:OysterCard) {described_class.new}
         expect(subject.journey).to eq false
       end
     end
+
   end
 end
