@@ -1,9 +1,7 @@
 require_relative '../lib/oyster_card.rb'
 
 describe OysterCard do
-
-subject(:OysterCard) {described_class.new}
-
+  subject(:OysterCard) {described_class.new}
 
   describe 'Balance' do
     it 'balance starts at 0' do
@@ -20,7 +18,7 @@ subject(:OysterCard) {described_class.new}
         expect {subject.topup(10)}.to change {subject.balance}.by(10)
       end
 
-      it 'doesn\'t allow you to exceed limit of £90' do
+      it "doesn't allow you to exceed limit of £90" do
         expect {subject.topup(100)}.to raise_error 'balance exceeded'
       end
     end
@@ -33,6 +31,8 @@ subject(:OysterCard) {described_class.new}
     end
 
     describe 'touch in' do
+      let(:station) {double :station}
+
       before do
         allow(subject).to receive(:balance).and_return(10)
       end
@@ -42,14 +42,26 @@ subject(:OysterCard) {described_class.new}
       end
 
       it 'sets the starting station' do
-        expect {subject.touch_in("Aldgate")}.to change(subject, :start_from)
+        subject.touch_in(station)
+        expect(subject.entry_station).to eq station
       end
     end
 
     describe 'touch out' do
+      let(:station) {double :station}
+
+      before do
+        allow(subject).to receive(:balance).and_return(10)
+      end
+
       it "touch out sets journey to false" do
         subject.touch_out
         expect(subject.journey).to eq false
+      end
+
+      it "forgets the entry station" do
+        subject.touch_in(station)
+        expect {subject.touch_out}.to change(subject, :entry_station).from(station).to(nil)
       end
     end
 

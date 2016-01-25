@@ -2,7 +2,7 @@ MAXIMUM_LIMIT = 90
 MINIMUM_LIMIT = 1
 
 class OysterCard
-  attr_reader :balance, :journey, :start_from
+  attr_reader :balance, :journey, :entry_station
 
   def initialize
     @journey = false
@@ -17,16 +17,17 @@ class OysterCard
     end
   end
 
-  def touch_in(starting_station = :Aldgate)
+  def touch_in(station = :Aldgate)
     fail "not enough money" if less_than_min_limit
     set_journey_status(true) unless in_journey?
-    set_start_of_journey(starting_station)
+    set_start_of_journey(station)
   end
 
 
   def touch_out
     set_journey_status(false) if in_journey?
     deduct
+    @entry_station = nil
   end
 
   private
@@ -43,8 +44,8 @@ class OysterCard
     @journey = status
   end
 
-  def set_start_of_journey(starting_station)
-    @start_from = starting_station
+  def set_start_of_journey(station)
+    @entry_station = station
   end
 
   def in_journey?
