@@ -29,7 +29,6 @@ class OysterCard
     set_journey_status(false) if in_journey?
     deduct
     set_exit_station(station)
-    create_trip
   end
 
   private
@@ -56,6 +55,7 @@ class OysterCard
 
   def set_exit_station(station)
     @exit_station = station
+    create_trip
   end
 
   def in_journey?
