@@ -33,6 +33,11 @@ class OysterCard
 
   private
 
+  def set_exit_station(station)
+    @exit_station = station
+    create_trip
+  end
+
   def create_trip
     @trip << [{start: @entry_station}, {end: @exit_station}]
   end
@@ -51,11 +56,6 @@ class OysterCard
 
   def set_entry_station(station)
     @entry_station = station
-  end
-
-  def set_exit_station(station)
-    @exit_station = station
-    create_trip
   end
 
   def in_journey?
