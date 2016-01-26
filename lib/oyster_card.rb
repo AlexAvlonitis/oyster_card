@@ -2,20 +2,18 @@ MAXIMUM_LIMIT = 90
 MINIMUM_LIMIT = 1
 
 class OysterCard
-  attr_reader :balance, :journey, :entry_station, :exit_station, :trip
+  attr_reader :balance, :journey, :trip_history, :current_trip
 
   def initialize
     @journey = false
     @balance = 0
-    @trip = []
+    @trip_history = []
+    @current_trip= {}
   end
 
   def topup(value)
-    if exceeds_max_limit(value)
-      fail 'balance exceeded'
-    else
-      add_to_balance(value)
-    end
+    fail 'balance exceeded' if exceeds_max_limit(value)
+    add_to_balance(value)
   end
 
   def touch_in(station = "")
@@ -23,7 +21,6 @@ class OysterCard
     set_journey_status(true) unless in_journey?
     set_entry_station(station)
   end
-
 
   def touch_out(station = "")
     set_journey_status(false) if in_journey?
@@ -34,12 +31,12 @@ class OysterCard
   private
 
   def set_exit_station(station)
-    @exit_station = station
+    @current_trip[:end] = station
     create_trip
   end
 
   def create_trip
-    @trip << [{start: @entry_station}, {end: @exit_station}]
+    @trip_history << @current_trip
   end
 
   def exceeds_max_limit(value)
@@ -55,11 +52,11 @@ class OysterCard
   end
 
   def set_entry_station(station)
-    @entry_station = station
+    @current_trip[:start] =  station
   end
 
   def in_journey?
-    @journey
+    journey
   end
 
   def add_to_balance(value)

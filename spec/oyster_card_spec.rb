@@ -12,7 +12,7 @@ describe OysterCard do
     end
 
     it "empty trips array when a new card is initialized" do
-      expect(subject.trip).to be_empty
+      expect(subject.trip_history).to be_empty
     end
 
     describe '#touch_in' do
@@ -22,7 +22,7 @@ describe OysterCard do
         end
 
         it 'sets the starting station' do
-          expect(subject.entry_station).to eq station
+          expect(subject.current_trip).to match({start: station})
         end
       end
     end
@@ -37,7 +37,7 @@ describe OysterCard do
         end
 
         it "creates a trip" do
-          expect(subject.trip).to eq [[{start: station}, {end: station}]]
+          expect(subject.trip_history).to include({start: station, end: station})
         end
       end
     end
