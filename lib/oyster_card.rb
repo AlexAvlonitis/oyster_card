@@ -25,6 +25,7 @@ class OysterCard
       journey.set_entry_station(station)
     else
       penalise
+      journey.set_exit_station(nil)
     end
   end
 
@@ -34,15 +35,15 @@ class OysterCard
       deduct
       journey.set_exit_station(station)
     else
-      journey.fare
+      penalise
+      journey.set_entry_station(nil)
     end
   end
 
   private
 
   def penalise
-    @balance -= journey.fare
-    journey.set_exit_station(nil)
+    @balance -= journey.penalty_fare
   end
 
   def exceeds_max_limit(value)

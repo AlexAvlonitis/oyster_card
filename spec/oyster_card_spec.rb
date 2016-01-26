@@ -23,6 +23,11 @@ describe OysterCard do
         it "deducts £6 if you touch in twice" do
           expect {subject.touch_in(station)}.to change(subject, :balance).by(-6)
         end
+
+        it "deducts £6 if you touch out before you touch in" do
+          subject.touch_out(station)
+          expect {subject.touch_out(station)}.to change(subject, :balance).by(-6)
+        end
       end
 
     end

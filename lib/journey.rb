@@ -21,7 +21,7 @@ class Journey
     @in_journey = status
   end
 
-  def fare
+  def penalty_fare
     PENALTY_FAIR
   end
 
