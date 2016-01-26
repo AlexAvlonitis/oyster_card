@@ -1,8 +1,11 @@
-require_relative '../lib/oyster_card.rb'
+require_relative '../lib/oyster_card'
+require_relative '../lib/journey'
 
 describe OysterCard do
-  subject(:OysterCard) {described_class.new}
+  let(:journey) { Journey.new }
+  subject(:subject) {described_class.new(journey)}
   let(:station) {double :station}
+
 
   describe 'Journeys' do
 
@@ -11,24 +14,25 @@ describe OysterCard do
       subject.touch_in(station)
     end
 
-    it "empty trips array when a new card is initialized" do
-      expect(subject.trip_history).to be_empty
+    it "return empty trips array when a new card is initialized" do
+      expect(subject.journey.trip_history).to be_empty
     end
 
     describe '#touch_in' do
       context 'when touching in' do
         it 'sets journey to true' do
-          expect(subject.journey).to eq true
+          expect(subject.journey.in_journey).to eq true
         end
 
         it 'sets the starting station' do
-          expect(subject.last_trip).to match({start: station})
+          expect(subject.journey.last_trip).to match({start: station})
         end
 
         it "can't touch in twice" do
           error = "can't touch in twice on the same journey"
           expect {subject.touch_in(station)}.to raise_error(error)
         end
+
       end
     end
 
@@ -38,11 +42,11 @@ describe OysterCard do
           subject.touch_out(station)
         end
         it "sets journey to false" do
-          expect(subject.journey).to eq false
+          expect(subject.journey.in_journey).to eq false
         end
 
         it "creates a trip" do
-          expect(subject.trip_history).to include({start: station, end: station})
+          expect(subject.journey.trip_history).to include({start: station, end: station})
         end
 
         it "can't touch out before touch in" do
