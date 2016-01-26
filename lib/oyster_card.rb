@@ -1,4 +1,5 @@
 require_relative 'journey'
+require_relative 'station'
 
 MAXIMUM_LIMIT = 90
 MINIMUM_LIMIT = 1
@@ -23,7 +24,7 @@ class OysterCard
       journey.set_journey_status(true)
       journey.set_entry_station(station)
     else
-      fail "can't touch in twice on the same journey"
+      penalise
     end
   end
 
@@ -33,11 +34,16 @@ class OysterCard
       deduct
       journey.set_exit_station(station)
     else
-      fail "can't touch out if you haven't touched in first"
+      journey.fare
     end
   end
 
   private
+
+  def penalise
+    @balance -= journey.fare
+    journey.set_exit_station(nil)
+  end
 
   def exceeds_max_limit(value)
     (@balance + value) > MAXIMUM_LIMIT

@@ -14,8 +14,17 @@ describe OysterCard do
       subject.touch_in(station)
     end
 
-    it "return empty trips array when a new card is initialized" do
+    it "returns empty trips array when a new card is initialized" do
       expect(subject.journey.trip_history).to be_empty
+    end
+
+    context "Penalty for incomplete journeys" do
+      describe "#penalise" do
+        it "deducts £6 if you touch in twice" do
+          expect {subject.touch_in(station)}.to change(subject, :balance).by(-6)
+        end
+      end
+
     end
 
     describe '#touch_in' do
@@ -26,11 +35,6 @@ describe OysterCard do
 
         it 'sets the starting station' do
           expect(subject.journey.last_trip).to match({start: station})
-        end
-
-        it "can't touch in twice" do
-          error = "can't touch in twice on the same journey"
-          expect {subject.touch_in(station)}.to raise_error(error)
         end
 
       end
@@ -49,27 +53,23 @@ describe OysterCard do
           expect(subject.journey.trip_history).to include({start: station, end: station})
         end
 
-        it "can't touch out before touch in" do
-          error = "can't touch out if you haven't touched in first"
-          expect {subject.touch_out(station)}.to raise_error(error)
-        end
       end
     end
 
   end
 
   describe 'Balance' do
-    it 'balance starts at 0' do
+    it 'starts at 0' do
       subject.balance
       expect(subject.balance).to eq 0
     end
 
-    it 'above minimum amount' do
+    it "can't touch in if it has below the minimum amount" do
       expect {subject.touch_in(station)}.to raise_error("not enough money")
     end
 
-    context 'Adding to the balance' do
-      it 'top up balance' do
+    describe 'Adding to the balance' do
+      it 'tops up balance' do
         expect {subject.topup(10)}.to change {subject.balance}.by(10)
       end
 
@@ -85,5 +85,6 @@ describe OysterCard do
         expect {subject.touch_out(station)}.to change(subject, :balance).by(-1)
       end
     end
+
   end
 end

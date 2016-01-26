@@ -1,3 +1,4 @@
+PENALTY_FAIR = 6
 class Journey
   attr_reader :in_journey, :trip_history, :last_trip
 
@@ -20,8 +21,12 @@ class Journey
     @in_journey = status
   end
 
+  def fare
+    PENALTY_FAIR
+  end
+
   def set_entry_station(station)
-    @last_trip[:start] =  station
+    @last_trip[:start] = station
   end
 
   def in_journey?
