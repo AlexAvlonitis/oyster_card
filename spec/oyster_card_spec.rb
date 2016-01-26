@@ -2,9 +2,9 @@ require_relative '../lib/oyster_card.rb'
 
 describe OysterCard do
   subject(:OysterCard) {described_class.new}
+  let(:station) {double :station}
 
   describe 'Journeys' do
-    let(:station) {double :station}
 
     before do
       subject.topup(10)
@@ -22,7 +22,12 @@ describe OysterCard do
         end
 
         it 'sets the starting station' do
-          expect(subject.current_trip).to match({start: station})
+          expect(subject.last_trip).to match({start: station})
+        end
+
+        it "can't touch in twice" do
+          error = "can't touch in twice on the same journey"
+          expect {subject.touch_in(station)}.to raise_error(error)
         end
       end
     end
@@ -39,6 +44,11 @@ describe OysterCard do
         it "creates a trip" do
           expect(subject.trip_history).to include({start: station, end: station})
         end
+
+        it "can't touch out before touch in" do
+          error = "can't touch out if you haven't touched in first"
+          expect {subject.touch_out(station)}.to raise_error(error)
+        end
       end
     end
 
@@ -51,7 +61,7 @@ describe OysterCard do
     end
 
     it 'above minimum amount' do
-      expect {subject.touch_in}.to raise_error("not enough money")
+      expect {subject.touch_in(station)}.to raise_error("not enough money")
     end
 
     context 'Adding to the balance' do
@@ -67,7 +77,8 @@ describe OysterCard do
     context 'Deducting from the balance' do
       it 'deducts minimum fare from balance when touch out' do
         subject.topup(10)
-        expect {subject.touch_out}.to change(subject, :balance).from(10).to(9)
+        subject.touch_in("bank")
+        expect {subject.touch_out(station)}.to change(subject, :balance).by(-1)
       end
     end
   end
