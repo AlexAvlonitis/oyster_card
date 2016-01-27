@@ -1,1 +1,1 @@
-Station = Struct.new(:name, :zone)
+Station = Struct.new(:start, :ends, :e_zone, :s_zone)

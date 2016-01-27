@@ -5,13 +5,14 @@ describe OysterCard do
   let(:journey) { Journey.new }
   subject(:subject) {described_class.new(journey)}
   let(:station) {double :station}
+  let(:zone) {double :zone}
 
 
   describe 'Journeys' do
 
     before do
       subject.topup(10)
-      subject.touch_in(station)
+      subject.touch_in(station, zone)
     end
 
     it "returns empty trips array when a new card is initialized" do
@@ -42,7 +43,7 @@ describe OysterCard do
     end
 
     it "can't touch in if it has below the minimum amount" do
-      expect {subject.touch_in(station)}.to raise_error("not enough money")
+      expect {subject.touch_in(station, zone)}.to raise_error("not enough money")
     end
 
     describe 'Adding to the balance' do
@@ -58,8 +59,8 @@ describe OysterCard do
     describe 'Deducting from the balance' do
       it 'deducts minimum fare from balance when touch out' do
         subject.topup(10)
-        subject.touch_in("bank")
-        expect {subject.touch_out(station)}.to change(subject, :balance).by(-1)
+        subject.touch_in(station, zone)
+        expect {subject.touch_out(station, zone)}.to change(subject, :balance).by(-1)
       end
     end
 

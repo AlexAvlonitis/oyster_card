@@ -17,14 +17,14 @@ class OysterCard
     @balance += value
   end
 
-  def touch_in(station)
+  def touch_in(station, zone)
     fail "not enough money" if less_than_min_limit
-    journey.touch_in_process(station)
+    journey.touch_in_process(station, zone)
   end
 
-  def touch_out(station)
+  def touch_out(station, zone)
     deduct
-    journey.touch_out_process(station)
+    journey.touch_out_process(station, zone)
   end
 
   private

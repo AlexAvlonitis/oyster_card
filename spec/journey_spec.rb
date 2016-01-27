@@ -1,8 +1,10 @@
 require_relative '../lib/journey'
 
 describe Journey do
-  let(:subject) { described_class.new }
+  let(:structor) { Station.new }
+  let(:subject) { described_class.new(structor) }
   let(:station) { double :station }
+  let(:zone) { double :zone }
 
   it { is_expected.to respond_to(:current_trip) }
 
@@ -10,7 +12,7 @@ describe Journey do
 
     describe '#touch_in_process' do
       before do
-        subject.touch_in_process(station)
+        subject.touch_in_process(station, zone)
       end
 
       it 'sets journey to true' do
@@ -18,21 +20,21 @@ describe Journey do
       end
 
       it 'sets the starting station' do
-        expect(subject.current_trip).to match({start: station})
+        expect(subject.station.start).to eq station
       end
 
       describe 'if you touch in twice' do
         it 'creates a journey and sets the exit station to nil' do
-          subject.touch_in_process(station)
-          expect(subject.trip_history).to include({start: station, end: nil})
+          subject.touch_in_process(station, zone)
+          expect(subject.trip_history.last.ends).to be_nil
         end
       end
     end
 
     describe '#touch_out_process' do
       before do
-        subject.touch_in_process(station)
-        subject.touch_out_process(station)
+        subject.touch_in_process(station, zone)
+        subject.touch_out_process(station, zone)
       end
 
       it "sets journey to false" do
@@ -40,13 +42,14 @@ describe Journey do
       end
 
       it "creates a trip" do
-        expect(subject.trip_history).to include({start: station, end: station})
+        expect(subject.trip_history.last.start).to eq station
+        expect(subject.trip_history.last.ends).to eq station
       end
 
       describe 'if you touch out before you touch in' do
         it 'creates a journey and sets the entry station to nil' do
-          subject.touch_out_process(station)
-          expect(subject.trip_history).to include({start: nil, end: station})
+          subject.touch_out_process(station, zone)
+          expect(subject.trip_history.last.start).to be nil
         end
       end
     end
