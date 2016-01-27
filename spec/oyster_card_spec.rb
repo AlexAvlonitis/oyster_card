@@ -46,7 +46,7 @@ describe OysterCard do
       expect {subject.touch_in(station, zone)}.to raise_error("not enough money")
     end
 
-    describe 'Adding to the balance' do
+    describe "Adding to the balance" do
       it 'tops up balance' do
         expect {subject.topup(10)}.to change {subject.balance}.by(10)
       end
