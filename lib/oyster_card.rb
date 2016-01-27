@@ -15,43 +15,24 @@ class OysterCard
 
   def topup(value)
     fail 'balance exceeded' if exceeds_max_limit(value)
-    add_to_balance(value)
+    @balance += value
   end
 
   def touch_in(station)
     fail "not enough money" if less_than_min_limit
-    unless journey.in_journey?
-      journey.set_journey_status(true)
-      journey.set_entry_station(station)
-    else
-      penalise
-      journey.set_exit_station(nil)
-    end
+    journey.touch_in_process(station)
   end
 
   def touch_out(station)
-    if journey.in_journey?
-      journey.set_journey_status(false)
-      deduct
-      journey.set_exit_station(station)
-    else
-      penalise
-      journey.set_entry_station(nil)
-    end
+    deduct
+    journey.touch_out_process(station)
   end
 
   private
 
-  def penalise
-    @balance -= journey.penalty_fare
-  end
 
   def exceeds_max_limit(value)
     (@balance + value) > MAXIMUM_LIMIT
-  end
-
-  def add_to_balance(value)
-    @balance += value
   end
 
   def less_than_min_limit

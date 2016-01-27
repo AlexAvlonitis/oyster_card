@@ -18,52 +18,24 @@ describe OysterCard do
       expect(subject.journey.trip_history).to be_empty
     end
 
-    context "Penalty for incomplete journeys" do
-      describe "#penalise" do
-        it "deducts £6 if you touch in twice" do
-          expect {subject.touch_in(station)}.to change(subject, :balance).by(-6)
-        end
-
-        it "deducts £6 if you touch out before you touch in" do
-          subject.touch_out(station)
-          expect {subject.touch_out(station)}.to change(subject, :balance).by(-6)
-        end
-      end
-
-    end
-
-    describe '#touch_in' do
-      context 'when touching in' do
-        it 'sets journey to true' do
-          expect(subject.journey.in_journey).to eq true
-        end
-
-        it 'sets the starting station' do
-          expect(subject.journey.last_trip).to match({start: station})
-        end
-
-      end
-    end
-
-    describe '#touch_out' do
-      context 'when touching out' do
-        before do
-          subject.touch_out(station)
-        end
-        it "sets journey to false" do
-          expect(subject.journey.in_journey).to eq false
-        end
-
-        it "creates a trip" do
-          expect(subject.journey.trip_history).to include({start: station, end: station})
-        end
-
-      end
-    end
+    # context "Penalty for incomplete journeys" do
+    #   describe "#penalise" do
+    #     it "deducts £6 if you touch in twice" do
+    #       expect {subject.touch_in(station)}.to change(subject, :balance).by(-6)
+    #     end
+    #
+    #     it "deducts £6 if you touch out before you touch in" do
+    #       subject.touch_out(station)
+    #       expect {subject.touch_out(station)}.to change(subject, :balance).by(-6)
+    #     end
+    #   end
+    #
+    # end
 
   end
 
   describe 'Balance' do
+
     it 'starts at 0' do
       subject.balance
       expect(subject.balance).to eq 0
@@ -83,7 +55,7 @@ describe OysterCard do
       end
     end
 
-    context 'Deducting from the balance' do
+    describe 'Deducting from the balance' do
       it 'deducts minimum fare from balance when touch out' do
         subject.topup(10)
         subject.touch_in("bank")
