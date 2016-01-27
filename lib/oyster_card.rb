@@ -3,7 +3,6 @@ require_relative 'station'
 
 MAXIMUM_LIMIT = 90
 MINIMUM_LIMIT = 1
-MINIMUM_FARE = 1
 
 class OysterCard
   attr_reader :balance, :journey
@@ -29,7 +28,6 @@ class OysterCard
   end
 
   private
-
 
   def exceeds_max_limit(value)
     (@balance + value) > MAXIMUM_LIMIT
