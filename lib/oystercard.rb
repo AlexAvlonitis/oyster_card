@@ -4,7 +4,7 @@ require_relative 'journey'
 
 class Oystercard
 
-  attr_reader :balance, :journey
+  attr_reader :balance, :journey_log
   BALANCE_MAX = 90
 
 
