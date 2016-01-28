@@ -4,63 +4,53 @@ PENALTY_FAIR = 6
 MINIMUM_FARE = 1
 
 class Journey
-  attr_reader :in_journey, :trip_history, :current_trip, :station
+  attr_reader :in_journey, :trip_history, :station
 
   def initialize(station = Station.new)
     @station = station
     @in_journey = false
     @trip_history = []
-    @current_trip = {}
   end
 
   def touch_in_process(station, zone)
     unless in_journey?
       @in_journey = true
-      set_entry_station(station)
-      set_s_zone(zone)
+      set_start(station, zone)
     else
-      set_s_zone(zone)
-      set_entry_station(station)
-      set_exit_station(nil)
-      set_e_zone(nil)
+      set_exit(nil, nil)
+      create_trip
+      set_start(station, zone)
     end
   end
 
   def touch_out_process(station, zone)
     if in_journey?
       @in_journey = false
-      set_e_zone(zone)
-      set_exit_station(station)
+      set_exit(station, zone)
+      create_trip
     else
-      set_entry_station(nil)
-      set_s_zone(nil)
-      set_e_zone(zone)
-      set_exit_station(station)
+      set_start(nil, nil)
+      set_exit(station, zone)
+      create_trip
     end
   end
 
   def fare
-    return PENALTY_FAIR if trip_history.last.values.include?(nil)
+    penalty_fair_total = 0
+    return PENALTY_FAIR if completed?
     MINIMUM_FARE
   end
 
   private
 
-  def set_entry_station(station)
+  def set_start(station, zone)
     @station.start = station
-  end
-
-  def set_e_zone(zone)
-    @station.e_zone = zone
-  end
-
-  def set_s_zone(zone)
     @station.s_zone = zone
   end
 
-  def set_exit_station(station)
+  def set_exit(station, zone)
     @station.ends = station
-    create_trip
+    @station.e_zone = zone
   end
 
   def create_trip
@@ -77,6 +67,10 @@ class Journey
 
   def in_journey?
     in_journey
+  end
+
+  def completed?
+    !!(@trip_history.last.values.include?(nil))
   end
 
 end

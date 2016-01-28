@@ -1,5 +1,2 @@
 --pending
-when you touch in twice, without touching out and then you touch out
-instead of storing the in and the out, it resets the in to nil
-the bug is on
-journey.rb - line 24
+deduct penalty when you touch in twice

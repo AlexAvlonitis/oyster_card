@@ -6,8 +6,6 @@ describe Journey do
   let(:station) { double :station }
   let(:zone) { double :zone }
 
-  it { is_expected.to respond_to(:current_trip) }
-
   context 'Touching in and out processes' do
 
     describe '#touch_in_process' do

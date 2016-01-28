@@ -1,5 +1,4 @@
 require_relative 'journey'
-require_relative 'station'
 
 MAXIMUM_LIMIT = 90
 MINIMUM_LIMIT = 1
@@ -23,8 +22,8 @@ class OysterCard
   end
 
   def touch_out(station, zone)
-    deduct
     journey.touch_out_process(station, zone)
+    deduct
   end
 
   private
@@ -38,6 +37,7 @@ class OysterCard
   end
 
   def deduct
-    @balance -= MINIMUM_FARE
+    @balance -= journey.fare
   end
+
 end
