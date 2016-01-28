@@ -17,24 +17,24 @@ class Journey
     unless in_journey?
       @in_journey = true
       set_entry_station(station)
-      set_e_zone(zone)
+      set_s_zone(zone)
     else
-      set_e_zone(zone)
+      set_s_zone(zone)
       set_entry_station(station)
       set_exit_station(nil)
-      set_s_zone(nil)
+      set_e_zone(nil)
     end
   end
 
   def touch_out_process(station, zone)
     if in_journey?
       @in_journey = false
-      set_s_zone(zone)
+      set_e_zone(zone)
       set_exit_station(station)
     else
       set_entry_station(nil)
-      set_e_zone(nil)
-      set_s_zone(zone)
+      set_s_zone(nil)
+      set_e_zone(zone)
       set_exit_station(station)
     end
   end
