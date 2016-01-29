@@ -36,7 +36,6 @@ class Journey
   end
 
   def fare
-    penalty_fair_total = 0
     return PENALTY_FAIR if completed?
     MINIMUM_FARE
   end
@@ -70,7 +69,7 @@ class Journey
   end
 
   def completed?
-    !!(@trip_history.last.values.include?(nil))
+    !!( trip_history.last.values.include?(nil) )
   end
 
 end
