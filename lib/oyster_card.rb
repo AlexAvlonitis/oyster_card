@@ -18,12 +18,29 @@ class OysterCard
 
   def touch_in(station, zone)
     fail "not enough money" if less_than_min_limit
-    journey.touch_in_process(station, zone)
+    unless journey.in_journey
+      journey.set_in_journey(true)
+      journey.set_start(station, zone)
+    else
+      journey.set_exit(nil, nil)
+      journey.create_trip
+      journey.set_start(station, zone)
+      deduct
+    end
   end
 
   def touch_out(station, zone)
-    journey.touch_out_process(station, zone)
-    deduct
+    if journey.in_journey
+      journey.set_in_journey(false)
+      journey.set_exit(station, zone)
+      journey.create_trip
+      deduct
+    else
+      journey.set_start(nil, nil)
+      journey.set_exit(station, zone)
+      journey.create_trip
+      deduct
+    end
   end
 
   private

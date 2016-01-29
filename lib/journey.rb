@@ -12,27 +12,8 @@ class Journey
     @trip_history = []
   end
 
-  def touch_in_process(station, zone)
-    unless in_journey?
-      @in_journey = true
-      set_start(station, zone)
-    else
-      set_exit(nil, nil)
-      create_trip
-      set_start(station, zone)
-    end
-  end
-
-  def touch_out_process(station, zone)
-    if in_journey?
-      @in_journey = false
-      set_exit(station, zone)
-      create_trip
-    else
-      set_start(nil, nil)
-      set_exit(station, zone)
-      create_trip
-    end
+  def set_in_journey(bool)
+    @in_journey = bool
   end
 
   def fare
@@ -40,7 +21,6 @@ class Journey
     MINIMUM_FARE
   end
 
-  private
 
   def set_start(station, zone)
     @station.start = station
